@@ -114,7 +114,7 @@
 //         return(true)
 // }
 
-// console.log(inprime(prime))
+// // console.log(inprime(prime))
 
 //10. Closure Counter
 
