@@ -1,4 +1,4 @@
-/* let str ="Bamu"
+/* let str ="umar"
 count = 0
 // for (i=0; i<str; i++){
 //     count+=1
