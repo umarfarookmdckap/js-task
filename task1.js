@@ -11,10 +11,10 @@ for (let b of str){
 console.log(count)
 */
 
+//self task
 
 
 
-3.
 
 /*
 let str ="programming is fun"
@@ -34,6 +34,7 @@ for (i=0; i<str.length; i++){
 console.log(str)
 console.log(`The vowels count is ${count}`)
 */
+//self task 
 
 //4. Use a loop to reverse the string "javascript" and store the result in a new string.
 
@@ -43,6 +44,7 @@ console.log(`The vowels count is ${count}`)
 //      ns = str[i]
 //     console.log(ns)
 // }
+//self task
 
 //-------------------------------------------------------------------------------
 // 5. Uppercase Each Character:
@@ -61,6 +63,8 @@ for (i=0; i<str.length; i++){
 }
  console.log(ns) */
 
+ //self task
+
  // -------------------------------------------------------------------------------
 // Find the First Repeated Character:
 // Write a loop that returns the first repeated character in "abacddbec".
@@ -75,6 +79,7 @@ for (i=0; i<str.length; i++){
 }
 console.log(repeat("abbacddbec")) 
  */
+//self task
 
 // -------------------------------------------------------------------------------
 // Sum of Elements:
@@ -87,6 +92,7 @@ for (i=0; i<a.length; i++){
 }
  console.log(sum)
  */ 
+// self task
 
 // -------------------------------------------------------------------------------
 // Find the Largest Number:
@@ -102,6 +108,8 @@ for (i=0; i<arr.length; i++){
 }
 console.log(big) */
 
+//self task
+
 // -------------------------------------------------------------------------------
 // Double Each Number:
 // Create a new array where each element in [2, 4, 6, 8] is doubled.
@@ -116,6 +124,8 @@ for (i=0; i<ar.length; i++){
 console.log(na)
  */
 
+//self task
+
 // -------------------------------------------------------------------------------
 // Count Even Numbers:
 // Count how many even numbers are in [1, 2, 3, 4, 5, 6].
@@ -129,6 +139,8 @@ for (i=0;i<arr.length;i++){
 }
 console.log(ar) */
 
+//self task
+
 // -------------------------------------------------------------------------------
 // Concatenate Array Elements into a String:Loop through ["I", "love", "JS"] and combine them into one string: "I love JS".
 /* let arr1 = ["I", "love", "JS"]
@@ -141,6 +153,7 @@ for (i=0;i<arr1.length;i++){
    }
 }
 console.log(`"${str}"`) */
+//self task
 
 // -------------------------------------------------------------------------------
 // Reverse Words:
@@ -159,6 +172,8 @@ for (let i=0;i<str2.length;i++){
 }
 console.log(nstr) */
 
+//self task
+
 // -------------------------------------------------------------------------------
 // Find Longest Word:
 // Loop through ["apple", "banana", "kiwi", "watermelon"] and find the longest word.
@@ -172,10 +187,12 @@ for (i=0; i<arr.length;i++){
 }
 console.log(str) */
 
+//self task
+
 // ==================Additional==============
 // -----------------------------1--------------------
 /*
-let a = ["bala","bamu","bagn"]
+let a = ["umar","farook","bagn"]
 // Push
 let b=12;
 if (b%2==0){
@@ -201,6 +218,8 @@ console.log(a)
 bala  = a.splice(2, 0, "Lemon", "Kiwi");
 console.log(a)
 */
+
+//self task
 
 // -----------------------------2--------------------
 /*
@@ -236,3 +255,5 @@ console.log("slice:", up);
 up.splice(1, 0, "mustang", "amzonBasis");
 console.log("splice:", up);
 */
+
+//self task
