@@ -160,6 +160,7 @@ console.log(`"${str}"`) */
 // Given "hello world", use loops to reverse each word individually → "olleh dlrow"
 
 /* let str = "hello world"
+console.log("Try programiz.pro");
 let str2 = str.split(" ") 
 let nstr = ""
 for (let i=0;i<str2.length;i++){
