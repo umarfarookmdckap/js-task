@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Neon Hover Counter</title>
+
+  <style>
+    /* --- General Layout --- */
+    body {
+      font-family: "Poppins", sans-serif;
+      background: radial-gradient(circle at top, #0f2027, #203a43, #2c5364);
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      overflow: hidden;
+    }
+
+    h1 {
+      font-size: 3em;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 30px;
+      background: linear-gradient(90deg, #00f260, #0575e6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: glowText 2s infinite alternate;
+    }
+
+    @keyframes glowText {
+      0% { text-shadow: 0 0 10px #00f260, 0 0 20px #0575e6; }
+      100% { text-shadow: 0 0 25px #00f260, 0 0 35px #0575e6; }
+    }
+
+    /* --- Counter Boxes --- */
+    .counter {
+      margin: 20px;
+      padding: 25px 50px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(8px);
+      box-shadow: 0 0 25px rgba(0, 255, 255, 0.2);
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+
+    .counter:hover {
+      transform: translateY(-5px) scale(1.03);
+      box-shadow: 0 0 30px rgba(0, 255, 255, 0.5);
+    }
+
+    .count {
+      font-size: 4em;
+      font-weight: bold;
+      text-shadow: 0 0 15px cyan;
+      transition: color 0.3s ease, text-shadow 0.3s ease;
+    }
+
+    /* --- Button Styling --- */
+    button {
+      padding: 14px 36px;
+      font-size: 18px;
+      border: none;
+      border-radius: 40px;
+      cursor: pointer;
+      margin: 15px;
+      font-weight: bold;
+      letter-spacing: 1px;
+      color: white;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Fancy glowing gradient buttons */
+    #increase {
+      background: linear-gradient(45deg, #00c853, #b2ff59);
+      box-shadow: 0 0 20px rgba(0, 255, 0, 0.3);
+    }
+
+    #decrease {
+      background: linear-gradient(45deg, #ff1744, #ff5252);
+      box-shadow: 0 0 20px rgba(255, 0, 0, 0.3);
+    }
+
+    #increase:hover {
+      background: linear-gradient(45deg, #76ff03, #00e676);
+      box-shadow: 0 0 30px #00e676;
+      transform: scale(1.1);
+    }
+
+    #decrease:hover {
+      background: linear-gradient(45deg, #ff5252, #ff1744);
+      box-shadow: 0 0 30px #ff1744;
+      transform: scale(1.1);
+    }
+
+    /* Ripple effect */
+    button::after {
+      content: "";
+      position: absolute;
+      width: 0;
+      height: 0;
+      background: rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      top: 50%;
+      left: 50%;
+      transition: width 0.4s ease, height 0.4s ease;
+    }
+
+    button:hover::after {
+      width: 250%;
+      height: 250%;
+    }
+
+    /* --- Responsive --- */
+    @media (max-width: 600px) {
+      .count {
+        font-size: 2.5em;
+      }
+
+      button {
+        padding: 12px 24px;
+        font-size: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <h1>✨ Neon Hover Counter ✨</h1>
+
+  <div class="counter">
+    <div class="count">0</div>
+  </div>
+
+  <div class="counter">
+    <div class="count">0</div>
+  </div>
+
+  <div>
+    <button id="increase">Hover to Increase ⬆️</button>
+    <button id="decrease">Hover to Decrease ⬇️</button>
+  </div>
+
+  <script>
+    const counts = document.getElementsByClassName("count");
+    let value = 0;
+    let interval;
+
+    // Function to update all counters
+    function updateCounters() {
+      for (let i = 0; i < counts.length; i++) {
+        counts[i].textContent = value;
+        counts[i].style.color = value >= 0 ? "#00e676" : "#ff5252";
+        counts[i].style.textShadow = value >= 0 
+          ? "0 0 15px #00e676" 
+          : "0 0 15px #ff5252";
+      }
+    }
+
+    // Hover to increase
+    const increaseBtn = document.getElementById("increase");
+    increaseBtn.addEventListener("mouseover", () => {
+      clearInterval(interval);
+      interval = setInterval(() => {
+        value++;
+        updateCounters();
+      }, 70);
+    });
+
+    increaseBtn.addEventListener("mouseout", () => {
+      clearInterval(interval);
+    });
+
+    // Hover to decrease
+    const decreaseBtn = document.getElementById("decrease");
+    decreaseBtn.addEventListener("mouseover", () => {
+      clearInterval(interval);
+      interval = setInterval(() => {
+        value--;
+        updateCounters();
+      }, 70);
+    });
+
+    decreaseBtn.addEventListener("mouseout", () => {
+      clearInterval(interval);
+    });
+  </script>
+</body>
+</html>
