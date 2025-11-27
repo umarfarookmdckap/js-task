@@ -67,7 +67,7 @@ console.log("Total Amount:",a) */
 //---------------------------------Task 6----------------------------------//
 // Write a program that converts all letters in a string to uppercase and also prints the reversed version of the string.
 
-/* let word = "developer BaMu";
+/* let word = "developer umar";
 let nstr = "";
 let ustr = word.toUpperCase()
 for (let i=word.length-1; i>=0; i--){
@@ -124,7 +124,7 @@ console.log(sentence1) */
 //---------------------------------Task 10---------------------------------//
 // Write a JavaScript program that removes duplicate characters from a string.
 
-/* let str = "BaMu developer"
+/* let str = "umar developer"
 let nstr = ""
 for (i=0; i<str.length; i++){
     if (!nstr.includes(str[i])){
