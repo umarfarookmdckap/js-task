@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Simple Chess Board — HTML/CSS/JS</title>
+  <style>
+    :root{
+      --board-size: min(90vmin, 720px);
+      --light: #eeeed2;
+      --dark: #769656;
+      --accent: #f0a500;
+    }
+    body{
+      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+      display:flex;align-items:flex-start;justify-content:center;gap:24px;
+      padding:24px;background:#f6f6f8;color:#111;
+      min-height:100vh;box-sizing:border-box;
+    }
+
+    .app{
+      display:flex;flex-direction:column;gap:12px;align-items:center;
+    }
+
+    .board-wrap{
+      width:var(--board-size);height:var(--board-size);
+      box-shadow:0 10px 30px rgba(0,0,0,0.12);border-radius:10px;overflow:hidden;
+      background:linear-gradient(180deg,#fff,#f3f3f6);
+      padding:10px;box-sizing:border-box;
+    }
+
+    .board{
+      width:100%;height:100%;display:grid;grid-template-columns:repeat(8,1fr);grid-template-rows:repeat(8,1fr);
+    }
+
+    .square{
+      display:flex;align-items:center;justify-content:center;position:relative;user-select:none;cursor:pointer;
+      font-size:clamp(20px,4vmin,48px);
+      transition:filter .12s, transform .08s;
+    }
+    .square:hover{filter:brightness(1.06);}
+
+    .square.light{background:var(--light)}
+    .square.dark{background:var(--dark)}
+
+    .square .coord{
+      position:absolute;left:4px;bottom:4px;font-size:12px;color:rgba(0,0,0,0.5);
+    }
+
+    .piece{
+      pointer-events:none; /* clicks handled on square */
+    }
+
+    .selected{outline:3px solid var(--accent);outline-offset:-3px}
+    .highlight{box-shadow:inset 0 0 0 3px rgba(240,165,0,0.2)}
+
+    .controls{display:flex;gap:8px;align-items:center}
+    button{padding:8px 12px;border-radius:8px;border:0;background:#111;color:#fff;cursor:pointer}
+    button.secondary{background:#666}
+
+    .info{max-width:260px;font-size:14px;line-height:1.3}
+
+    @media (max-width:720px){
+      body{padding:12px}
+      .info{display:none}
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div style="display:flex;align-items:center;gap:12px">
+      <h2 style="margin:0">Chess Board</h2>
+      <small style="color:#666">(click a piece then a target square to move — simple demo)</small>
+    </div>
+
+    <div class="board-wrap">
+      <div id="board" class="board" aria-label="Chess board"></div>
+    </div>
+
+    <div class="controls">
+      <button id="resetBtn">Reset</button>
+      <button id="flipBtn" class="secondary">Flip Board</button>
+      <button id="coordsBtn" class="secondary">Toggle Coordinates</button>
+    </div>
+  </div>
+
+  <div class="info">
+    <h3 style="margin:0 0 8px 0">About this demo</h3>
+    <p>This is a single-file HTML/CSS/JS chessboard. It uses a grid to render 8×8 squares and places pieces using Unicode chess glyphs. Click a square with a piece to select it, then click a destination square to move. It does <strong>not</strong> enforce chess rules — moves are free. Use <em>Reset</em> and <em>Flip Board</em> to change the view.</p>
+    <p>If you want: <strong>legal move generation</strong>, <strong>drag & drop</strong>, or a basic <strong>AI</strong> opponent, tell me and I'll add it.</p>
+  </div>
+
+  <script>
+    // --- simple chessboard renderer + click-to-move ---
+
+    const boardEl = document.getElementById('board');
+    const resetBtn = document.getElementById('resetBtn');
+    const flipBtn = document.getElementById('flipBtn');
+    const coordsBtn = document.getElementById('coordsBtn');
+
+    // Unicode pieces (white then black)
+    const UNICODE = {
+      r: '♜', n: '♞', b: '♝', q: '♛', k: '♚', p: '♟',
+      R: '♖', N: '♘', B: '♗', Q: '♕', K: '♔', P: '♙'
+    };
+
+    // Starting position (FEN-like rows)
+    const START_ROWS = [
+      'rnbqkbnr',
+      'pppppppp',
+      '--------',
+      '--------',
+      '--------',
+      '--------',
+      'PPPPPPPP',
+      'RNBQKBNR'
+    ];
+
+    // internal board as 2D array (row 0 is top -> rank 8)
+    let board = [];
+    let selected = null;
+    let showCoords = true;
+    let flipped = false;
+
+    function resetBoard(){
+      board = START_ROWS.map(row => row.split('').map(ch => ch === '-' ? null : ch));
+      selected = null;
+      render();
+    }
+
+    function render(){
+      // clear
+      boardEl.innerHTML = '';
+
+      // order of ranks depends on flipped
+      const ranks = [...Array(8).keys()];
+      if (!flipped) ranks.reverse(); // so rank 8 -> 1 top->bottom when not flipped
+      // files a->h left->right normally, flip horizontally when flipped
+      const files = [...'abcdefgh'];
+
+      for (let rIndex = 0; rIndex < 8; rIndex++){
+        const rank = ranks[rIndex];
+        for (let fIndex = 0; fIndex < 8; fIndex++){
+          const file = files[flipped ? (7-fIndex) : fIndex];
+          const squareEl = document.createElement('div');
+          squareEl.className = 'square ' + (((rIndex + fIndex) % 2 === 0) ? 'light' : 'dark');
+          const boardRow = flipped ? 7 - rank : rank; // map to internal row index
+          const boardCol = flipped ? 7 - fIndex : fIndex;
+
+          squareEl.dataset.row = boardRow;
+          squareEl.dataset.col = boardCol;
+          squareEl.dataset.coord = file + (8 - rank);
+
+          // coord label
+          if (showCoords){
+            const coord = document.createElement('div');
+            coord.className = 'coord';
+            coord.textContent = squareEl.dataset.coord;
+            squareEl.appendChild(coord);
+          }
+
+          // piece
+          const piece = board[boardRow] && board[boardRow][boardCol];
+          if (piece){
+            const p = document.createElement('div');
+            p.className = 'piece';
+            p.textContent = UNICODE[piece] || '?';
+            squareEl.appendChild(p);
+          }
+
+          // selection highlight
+          if (selected && selected.row == boardRow && selected.col == boardCol){
+            squareEl.classList.add('selected');
+          }
+
+          squareEl.addEventListener('click', onSquareClick);
+          boardEl.appendChild(squareEl);
+        }
+      }
+    }
+
+    function onSquareClick(e){
+      const sq = e.currentTarget;
+      const row = Number(sq.dataset.row);
+      const col = Number(sq.dataset.col);
+      const piece = board[row][col];
+
+      if (selected){
+        // If clicked same square, deselect
+        if (selected.row === row && selected.col === col){
+          selected = null; render(); return;
+        }
+
+        // move selected -> target (no legality checks)
+        board[row][col] = board[selected.row][selected.col];
+        board[selected.row][selected.col] = null;
+        selected = null;
+        render();
+        return;
+      }
+
+      // if no selection and clicked a piece, select it
+      if (piece){
+        selected = {row, col};
+        render();
+      }
+    }
+
+    // Buttons
+    resetBtn.addEventListener('click', () => { resetBoard(); });
+    flipBtn.addEventListener('click', () => { flipped = !flipped; render(); });
+    coordsBtn.addEventListener('click', () => { showCoords = !showCoords; render(); });
+
+    // initialize
+    resetBoard();
+  </script>
+</body>
+</html>
